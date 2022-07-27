@@ -10,6 +10,7 @@ import androidx.paging.PagedList
 import androidx.recyclerview.widget.AsyncDifferConfig
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericFastAdapter
@@ -61,7 +62,7 @@ class MainActivity : AppCompatActivity() {
                 Status.FAILED -> {
                     footerAdapter.clear()
                     binding.pbHome.visibility = View.GONE
-//                    createRetrySnackbar()
+                    createRetrySnackbar()
                     retrySnackbar?.show()
                 }
                 Status.SUCCESS -> {
@@ -126,5 +127,14 @@ class MainActivity : AppCompatActivity() {
 //            )
 //        )
 //        onItemClick()
+    }
+
+    private fun createRetrySnackbar() {
+        retrySnackbar =
+            Snackbar.make(binding.root, "Error get character data", Snackbar.LENGTH_INDEFINITE)
+//                .setAnchorView(this.findViewById(R.id.bottomNavView) as BottomNavigationView)
+                .setAction("Coba lagi") {
+                    viewModel.refreshFailedRequest()
+                }
     }
 }
