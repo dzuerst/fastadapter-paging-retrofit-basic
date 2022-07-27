@@ -52,14 +52,26 @@ class CharacterDataSource(
 
     private fun executeQuery(callback: (List<CharacterData>) -> Unit){
         coroutineScope.launch(getJobErrorHandler() + supervisorJob) {
-            page += 1
+//            page += 1
             val response = RetroInstance.getRetroInstance().create(
             RetroService::class.java).getDataFromAPI(page).body()
+
+            // this "if" keyword is to prevent paging loading next data when error happen
+            // ex : internet network is not available
+
+            // tanpa if ini jika pada awalnya internet dimatikan
+            // maka saat retry dan internet sudah tersedia, yang akan diload adalah
+            // page kedua (meski response tidak ada dan error page tetap ditambahkan + 1 jika
+            // tanpa if)
+            if(RetroInstance.getRetroInstance().create(RetroService::class.java).getDataFromAPI(page).isSuccessful){
+                page += 1
+            }
 
             nextPageToken = response?.info?.next
 
             val characterList = response?.results
-            Log.i("CharDataSource", "executeQuery: $characterList")
+//            Log.i("CharDataSource", "executeQuery: $characterList")
+            Log.i("CharacterDataSource", "executeQuery: $page")
 
             retryQuery = null
             networkState.postValue(NetworkState.LOADED)
