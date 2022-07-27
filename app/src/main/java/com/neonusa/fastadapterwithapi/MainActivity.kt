@@ -71,9 +71,11 @@ class MainActivity : AppCompatActivity() {
                 }
                 Status.LOADING -> {
                     if (!isFirstPageLoading) {
-//                        showRecyclerViewProgressIndicator()
+                        showRecyclerViewProgressIndicator()
+                        Log.i("MainActivity", "setupCharactersObservables: hello !isFirstPageLoading")
                     } else {
                         isFirstPageLoading = false
+                        Log.i("MainActivity", "setupCharactersObservables: Hello i am loading")
                     }
                 }
                 else -> {}
@@ -84,6 +86,12 @@ class MainActivity : AppCompatActivity() {
         viewModel.characterLiveData?.observe(this) { characterList ->
             characterPagedModelAdapter.submitList(characterList)
         }
+    }
+
+    private fun showRecyclerViewProgressIndicator() {
+        footerAdapter.clear()
+        val progressIndicatorItem = ProgressIndicatorItem()
+        footerAdapter.add(progressIndicatorItem)
     }
 
     private fun setupRecyclerView(savedInstanceState: Bundle?) {

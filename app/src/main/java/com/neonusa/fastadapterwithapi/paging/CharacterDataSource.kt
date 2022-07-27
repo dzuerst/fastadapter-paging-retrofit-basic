@@ -50,11 +50,15 @@ class CharacterDataSource(
         }
     }
 
+    // catatan : state loading diberikan sebelum pembuatan response
+
     private fun executeQuery(callback: (List<CharacterData>) -> Unit){
         coroutineScope.launch(getJobErrorHandler() + supervisorJob) {
 //            page += 1
+
+            networkState.postValue(NetworkState.LOADING)
             val response = RetroInstance.getRetroInstance().create(
-            RetroService::class.java).getDataFromAPI(page).body()
+            RetroService::class.java).getDataFromAPI(page).body() // long proccess happen here (can blocking coroutine process)
 
             // this "if" keyword is to prevent paging loading next data when error happen
             // ex : internet network is not available
@@ -63,20 +67,34 @@ class CharacterDataSource(
             // maka saat retry dan internet sudah tersedia, yang akan diload adalah
             // page kedua (meski response tidak ada dan error page tetap ditambahkan + 1 jika
             // tanpa if)
+
             if(RetroInstance.getRetroInstance().create(RetroService::class.java).getDataFromAPI(page).isSuccessful){
                 page += 1
+
+                nextPageToken = response?.info?.next
+
+                val characterList = response?.results
+//            Log.i("CharDataSource", "executeQuery: $characterList")
+                Log.i("CharacterDataSource", "executeQuery: $page")
+
+                retryQuery = null
+                networkState.postValue(NetworkState.LOADED)
+
+                callback(characterList ?: emptyList())
+            } else {
+                networkState.postValue(NetworkState.error("Some error happen"))
             }
 
-            nextPageToken = response?.info?.next
-
-            val characterList = response?.results
-//            Log.i("CharDataSource", "executeQuery: $characterList")
-            Log.i("CharacterDataSource", "executeQuery: $page")
-
-            retryQuery = null
-            networkState.postValue(NetworkState.LOADED)
-
-            callback(characterList ?: emptyList())
+//            nextPageToken = response?.info?.next
+//
+//            val characterList = response?.results
+////            Log.i("CharDataSource", "executeQuery: $characterList")
+//            Log.i("CharacterDataSource", "executeQuery: $page")
+//
+//            retryQuery = null
+//            networkState.postValue(NetworkState.LOADED)
+//
+//            callback(characterList ?: emptyList())
         }
     }
 

@@ -1,10 +1,7 @@
 package com.neonusa.fastadapterwithapi
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.neonusa.fastadapterwithapi.helper.ResultWrapper
@@ -21,11 +18,13 @@ class MainViewModel: ViewModel() {
     var characterLiveData: LiveData<PagedList<CharacterData>>? = null
     var networkStateLiveData: LiveData<NetworkState>? = null
 
+    // network state control
+    private val networkStateControl = MutableLiveData<ResultWrapper>()
+
     fun getCharacters() {
         if (characterLiveData == null) {
             viewModelScope.launch {
                 characterDsFactory = CharacterDataSourceFactory(viewModelScope)
-//                characterLiveData.value = ResultWrapper.Loading
 //
 //                val uploadsPlaylistIdRequest = async(Dispatchers.IO) { homeRepository.getUploadsPlaylistId(channelId) }
 //                val response = uploadsPlaylistIdRequest.await()
