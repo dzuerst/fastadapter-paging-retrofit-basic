@@ -3,6 +3,7 @@ package com.neonusa.fastadapterwithapi
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.paging.PagedList
@@ -55,17 +56,17 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupCharactersObservables() {
         // Observe network live data
-        viewModel.networkStateLiveData?.observe(this, Observer { networkState ->
+        viewModel.networkStateLiveData?.observe(this) { networkState ->
             when (networkState?.status) {
                 Status.FAILED -> {
                     footerAdapter.clear()
-//                    pbHome.makeGone()
+                    binding.pbHome.visibility = View.GONE
 //                    createRetrySnackbar()
                     retrySnackbar?.show()
                 }
                 Status.SUCCESS -> {
                     footerAdapter.clear()
-//                    pbHome.makeGone()
+                    binding.pbHome.visibility = View.GONE
                 }
                 Status.LOADING -> {
                     if (!isFirstPageLoading) {
@@ -74,15 +75,14 @@ class MainActivity : AppCompatActivity() {
                         isFirstPageLoading = false
                     }
                 }
+                else -> {}
             }
-        })
+        }
 
         // Observe latest video live data
-        viewModel.characterLiveData?.observe(
-            this,
-            Observer<PagedList<CharacterData>> { characterList ->
-                characterPagedModelAdapter.submitList(characterList)
-            })
+        viewModel.characterLiveData?.observe(this) { characterList ->
+            characterPagedModelAdapter.submitList(characterList)
+        }
     }
 
     private fun setupRecyclerView(savedInstanceState: Bundle?) {

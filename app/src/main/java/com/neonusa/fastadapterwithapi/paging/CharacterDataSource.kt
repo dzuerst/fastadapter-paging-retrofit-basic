@@ -21,6 +21,8 @@ class CharacterDataSource(
     private var retryQuery: (() -> Any)? = null
     private var nextPageToken: String? = null
 
+    var page = 0
+
     override fun loadInitial(
         params: LoadInitialParams<String>,
         callback: LoadInitialCallback<String, CharacterData>
@@ -50,8 +52,9 @@ class CharacterDataSource(
 
     private fun executeQuery(callback: (List<CharacterData>) -> Unit){
         coroutineScope.launch(getJobErrorHandler() + supervisorJob) {
+            page += 1
             val response = RetroInstance.getRetroInstance().create(
-            RetroService::class.java).getDataFromAPI(1).body()
+            RetroService::class.java).getDataFromAPI(page).body()
 
             nextPageToken = response?.info?.next
 
