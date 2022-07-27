@@ -4,13 +4,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
-import androidx.paging.PagedList
 import androidx.recyclerview.widget.AsyncDifferConfig
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericFastAdapter
@@ -18,6 +14,7 @@ import com.mikepenz.fastadapter.adapters.GenericItemAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.paged.PagedModelAdapter
 import com.neonusa.fastadapterwithapi.databinding.ActivityMainBinding
+import com.neonusa.fastadapterwithapi.helper.isInternetAvailable
 import com.neonusa.fastadapterwithapi.model.CharacterData
 import com.neonusa.fastadapterwithapi.paging.Status
 
@@ -41,7 +38,12 @@ class MainActivity : AppCompatActivity() {
 
         viewModel = MainViewModel()
 
-        viewModel.getCharacters()
+        // library from helper to check internet connectivity
+        if (this.isInternetAvailable()) {
+            viewModel.getCharacters()
+        } else {
+            showErrorState()
+        }
 
         setupCharactersObservables()
         setupRecyclerView(savedInstanceState)
@@ -86,6 +88,13 @@ class MainActivity : AppCompatActivity() {
         viewModel.characterLiveData?.observe(this) { characterList ->
             characterPagedModelAdapter.submitList(characterList)
         }
+    }
+
+    private fun showErrorState() {
+        binding.rvMain.visibility = View.GONE
+        binding.pbHome.visibility = View.GONE
+        binding.errorLayout.visibility = View.VISIBLE
+        binding.tvErrorHome.text = "Harap periksa koneksi internet dan coba lagi!"
     }
 
     private fun showRecyclerViewProgressIndicator() {

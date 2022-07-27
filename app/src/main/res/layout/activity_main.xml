@@ -16,6 +16,57 @@
 <!--        app:layout_constraintEnd_toEndOf="parent"-->
 <!--        app:layout_constraintStart_toStartOf="parent"/>-->
 
+    <LinearLayout
+        android:id="@+id/error_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/ivErrorHome"
+            android:layout_width="160dp"
+            android:layout_height="111dp"
+            app:srcCompat="@drawable/ic_error"
+            app:layout_constraintTop_toBottomOf="@+id/ablHome"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/tvErrorHome" />
+
+        <TextView
+            android:id="@+id/tvErrorHome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="Koneksi gagal"
+            android:textAlignment="center"
+            android:textColor="?android:attr/textColorSecondary"
+            app:layout_constraintBottom_toTopOf="@+id/btnRetryHome"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ivErrorHome" />
+
+<!--        <com.google.android.material.button.MaterialButton-->
+<!--            android:id="@+id/btnRetryHome"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="16dp"-->
+<!--            android:text="@string/btn_retry"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/tvErrorHome" />-->
+
+    </LinearLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_main"
         android:layout_width="match_parent"

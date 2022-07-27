@@ -69,6 +69,7 @@ class CharacterDataSource(
             // tanpa if)
 
             if(RetroInstance.getRetroInstance().create(RetroService::class.java).getDataFromAPI(page).isSuccessful){
+               // dalam beberapa kasus ada yang nextpage tokenya berupa kode/id atau bahkan url
                 page += 1
 
                 nextPageToken = response?.info?.next
